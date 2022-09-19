@@ -79,8 +79,6 @@ export const options = {
   },
   interaction: {
     intersect: false,
-    mode: "index",
-    axis: "x",
   },
 };
 
