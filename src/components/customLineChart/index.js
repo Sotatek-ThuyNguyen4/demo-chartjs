@@ -14,6 +14,28 @@ import {
 import { Line } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
 
+const customPlugin = {
+  id: "chart-bar",
+  afterDraw: function (chart, easing) {
+    if (chart.tooltip._active && chart.tooltip._active.length) {
+      const activePoint = chart.tooltip._active[0];
+      const ctx = chart.ctx;
+      const x = activePoint.element.x;
+      const topY = chart.scales.y.top;
+      const bottomY = chart.scales.y.bottom;
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([5, 7]);
+      ctx.moveTo(x, topY);
+      ctx.lineTo(x, bottomY);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#b8add2";
+      ctx.stroke();
+      ctx.restore();
+    }
+  },
+};
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,10 +44,11 @@ ChartJS.register(
   Title,
   Tooltip,
   Filler,
-  Legend
+  Legend,
+  customPlugin
 );
 
-export const options = {
+const options = {
   responsive: true,
   plugins: {
     legend: {
@@ -79,6 +102,8 @@ export const options = {
   },
   interaction: {
     intersect: false,
+    mode: "index",
+    axis: "x",
   },
 };
 
