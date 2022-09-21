@@ -3,6 +3,7 @@ import "./App.css";
 import CustomLineChart from "./components/customLineChart";
 import CustomRadarChart from "./components/customRadarChat";
 import CustomPolarAreaChat from "./components/customPolarAreaChat";
+import D3LineChart from "./components/d3LineChart";
 
 function App() {
   return (
@@ -12,13 +13,21 @@ function App() {
         <div className="mt-5 py-4 row">
           <div className="py-3 col-12">
             <div className="card">
+              <div className="card-header">D3LineChart</div>
+              <div className="card-body">
+                <D3LineChart />
+              </div>
+            </div>
+          </div>
+          {/* <div className="py-3 col-12">
+            <div className="card">
               <div className="card-header">Balance Overview</div>
               <div className="card-body">
                 <CustomLineChart />
               </div>
             </div>
           </div>
-          {/* <div className="py-3 col-12 col-md-6">
+          <div className="py-3 col-12 col-md-6">
             <div className="card">
               <div className="card-header">Deal Type</div>
               <div className="card-body">
