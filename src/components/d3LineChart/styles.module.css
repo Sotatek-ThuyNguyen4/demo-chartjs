@@ -1,0 +1,43 @@
+.wrapper {
+    position: relative;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    text-align: left;
+    border: solid 1px rgb(33, 37, 41, 0.4);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.tooltip .header{    
+    background-color: #dee2e6;
+    padding: 6px 12px;
+}
+
+.tooltip .header span {
+    font-size: 14px;
+}
+
+.tooltip .content {
+    background-color: white;
+}
+.tooltip .content ul{
+    padding: 12px;
+    margin: 0px;
+    list-style: none;
+}
+.tooltip .content ul li {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+.tooltip .content ul li span:first-child {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
