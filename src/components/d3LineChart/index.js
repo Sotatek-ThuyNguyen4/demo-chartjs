@@ -29,7 +29,7 @@ const D3LineChart = () => {
 
   const genFakeData = () => {
     return labels.map((item, idx) => {
-      const date = labels[idx];
+      const date = idx;
       const value = faker.datatype.number({ min: 0, max: 500 });
       return { date, value };
     });
@@ -60,9 +60,9 @@ const D3LineChart = () => {
       .style("opacity", 0);
 
     // set the ranges
-    const x = d3.scalePoint().range([0, width]);
+    const x = d3.scaleLinear().range([0, width]);
     const y = d3.scaleLinear().range([height, 0]);
-    x.domain(labels);
+    x.domain([0, labels.length - 1]);
     y.domain([
       0,
       d3.max(data.flat(), (d) => {
@@ -84,10 +84,40 @@ const D3LineChart = () => {
     svg
       .append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).tickFormat((x) => labels[x]));
 
     // add the Y Axis
     svg.append("g").call(d3.axisLeft(y).tickFormat((y) => "$" + y + "k"));
+
+    const mousemove = (e) => {
+      const bisectDate = d3.bisector(function (d) {
+        return d.date;
+      }).left;
+      const x0 = x.invert(d3.pointer(e, this)[0]);
+      data.forEach((dt, idx) => {
+        const i = bisectDate(dt, x0, 1),
+          d0 = dt[i - 1],
+          d1 = dt[i],
+          d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        focusEl
+          .select(`circle.y${idx}`)
+          .attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
+      });
+    };
+
+    svg
+      .append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .on("mouseover", function () {
+        focusEl.style("display", null);
+      })
+      .on("mouseout", function () {
+        focusEl.style("display", "none");
+      })
+      .on("mousemove", mousemove);
   };
 
   const renderAreaLine = (options, i) => {
