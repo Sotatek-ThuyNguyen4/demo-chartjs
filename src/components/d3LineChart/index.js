@@ -83,11 +83,36 @@ const D3LineChart = () => {
     // add the X Axis
     svg
       .append("g")
+      .attr("class", "x-axis")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x).tickFormat((x) => labels[x]));
 
     // add the Y Axis
-    svg.append("g").call(d3.axisLeft(y).tickFormat((y) => "$" + y + "k"));
+    svg
+      .append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y).tickFormat((y) => "$" + y + "k"));
+
+    // add the X gridlines
+    svg
+      .append("line")
+      .attr("class", "x-grid")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 0)
+      .attr("y2", height)
+      .style("opacity", 0)
+      .style("stroke-dasharray", "5, 7")
+      .style("stroke-width", 1)
+      .style("stroke", "rgb(182, 182, 182)")
+      .style("fill", "none");
+
+    // add the Y gridlines
+    svg
+      .append("g")
+      .attr("class", "y-grid")
+      .style("color", "rgba(243, 246, 249, 0.75)")
+      .call(d3.axisLeft(y).tickSize(-width).tickFormat(""));
 
     const mousemove = (e) => {
       const bisectDate = d3.bisector(function (d) {
@@ -98,10 +123,15 @@ const D3LineChart = () => {
         const i = bisectDate(dt, x0, 1),
           d0 = dt[i - 1],
           d1 = dt[i],
-          d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+          d = x0 - d0?.date > d1?.date - x0 ? d1 : d0;
         focusEl
           .select(`circle.y${idx}`)
           .attr("transform", "translate(" + x(d.date) + "," + y(d.value) + ")");
+        svg
+          .select("line.x-grid")
+          .attr("x1", x(d.date))
+          .attr("x2", x(d.date))
+          .style("opacity", 1);
       });
     };
 
@@ -116,6 +146,7 @@ const D3LineChart = () => {
       })
       .on("mouseout", function () {
         focusEl.style("display", "none");
+        svg.select("line.x-grid").style("opacity", 0);
       })
       .on("mousemove", mousemove);
   };
