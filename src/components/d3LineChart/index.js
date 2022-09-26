@@ -67,21 +67,6 @@ const D3LineChart = () => {
       }),
     ]);
 
-    var focusEl = svg.append("g").style("display", "none");
-    var tooltipEl = d3.select(tooltipRef.current);
-
-    // render area and line
-    let options = { x, y, width, height, svg, focusEl };
-    data.forEach((d, i) => {
-      options.data = d;
-      options.color = colors[i];
-      renderAreaLine(options, i);
-
-      const tooltipData = tooltipEl.select("ul").append("li");
-      tooltipData.append("span").style("background-color", colors[i].border);
-      tooltipData.append("span").attr("class", `data${i}`);
-    });
-
     // add the X Axis
     svg
       .append("g")
@@ -94,6 +79,13 @@ const D3LineChart = () => {
       .append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(y).tickFormat((y) => "$" + y + "k"));
+
+    // add the Y gridlines
+    svg
+      .append("g")
+      .attr("class", "y-grid")
+      .style("color", "rgba(243, 246, 249, 0.75)")
+      .call(d3.axisLeft(y).tickSize(-width).tickFormat(""));
 
     // add the X gridlines
     svg
@@ -109,12 +101,23 @@ const D3LineChart = () => {
       .style("stroke", "rgb(182, 182, 182)")
       .style("fill", "none");
 
-    // add the Y gridlines
-    svg
+    var focusEl = svg
       .append("g")
-      .attr("class", "y-grid")
-      .style("color", "rgba(243, 246, 249, 0.75)")
-      .call(d3.axisLeft(y).tickSize(-width).tickFormat(""));
+      .attr("class", "focus")
+      .style("display", "none");
+    var tooltipEl = d3.select(tooltipRef.current);
+
+    // render area and line
+    let options = { x, y, width, height, svg, focusEl };
+    data.forEach((d, i) => {
+      options.data = d;
+      options.color = colors[i];
+      renderAreaLine(options, i);
+
+      const tooltipData = tooltipEl.select("ul").append("li");
+      tooltipData.append("span").style("background-color", colors[i].border);
+      tooltipData.append("span").attr("class", `data${i}`);
+    });
 
     const mousemove = (e) => {
       const bisectDate = d3.bisector(function (d) {
