@@ -41,3 +41,46 @@
     border-radius: 50%;
     margin-right: 6px;
 }
+
+.labelBottom {
+    position: absolute;
+    bottom: 24px;
+    left: 0px;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    background-color: #dee2e6;
+    border: solid 1px rgb(33, 37, 41, 0.4);
+    width: 40px;
+    height: 25px;
+    font-size: 10px;
+    font-weight: bold;
+    padding-top: 2px;
+}
+
+.labelBottom::before{
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 0;
+    height: 0;
+    z-index: 999;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 8px solid #dee2e6;
+}
+
+.labelBottom::after{
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgb(33, 37, 41, 0.4);
+}

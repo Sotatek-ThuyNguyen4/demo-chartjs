@@ -29,6 +29,7 @@ const D3LineChart = () => {
   const wrapperRef = useRef();
   const svgRef = useRef();
   const tooltipRef = useRef();
+  const labelBottomRef = useRef();
 
   const genFakeData = () => {
     return labels.map((item, idx) => {
@@ -151,6 +152,11 @@ const D3LineChart = () => {
         tooltipEl
           .select(`.data${idx}`)
           .html(title[idx] + ": <b>$" + d.value + "k</b>");
+
+        d3.select(labelBottomRef.current)
+          .style("left", `${x(d.date) + 50}px`)
+          .text(tooltipTitle)
+          .style("opacity", 1);
       });
     };
 
@@ -167,6 +173,10 @@ const D3LineChart = () => {
         focusEl.style("display", "none");
         svg.select("line.x-grid").style("opacity", 0);
         d3.select(tooltipRef.current)
+          .transition()
+          .duration(200)
+          .style("opacity", 0);
+        d3.select(labelBottomRef.current)
           .transition()
           .duration(200)
           .style("opacity", 0);
@@ -241,6 +251,7 @@ const D3LineChart = () => {
           <ul></ul>
         </div>
       </div>
+      <div ref={labelBottomRef} className={styles.labelBottom}></div>
     </div>
   );
 };
